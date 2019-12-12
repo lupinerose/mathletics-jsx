@@ -3,42 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using mathletics.Context;
 
-namespace mathletics_jsx.Controllers
+namespace mathletics.Controllers
 {
     [Route("api/[controller]")]
-    public class SampleDataController : Controller
+    public class QuestionsController : Controller
     {
-        private static string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
 
         [HttpGet("[action]")]
-        public IEnumerable<WeatherForecast> WeatherForecasts()
+        public List<Question> GetAll(int startDateIndex)
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            System.Console.WriteLine(Request.HttpContext.Connection.RemoteIpAddress);
+            List<Question> quiz = MathleticsData.GetQuiz();
+            foreach(Question question in quiz)
             {
-                DateFormatted = DateTime.Now.AddDays(index).ToString("d"),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            });
-        }
-
-        public class WeatherForecast
-        {
-            public string DateFormatted { get; set; }
-            public int TemperatureC { get; set; }
-            public string Summary { get; set; }
-
-            public int TemperatureF
-            {
-                get
-                {
-                    return 32 + (int)(TemperatureC / 0.5556);
-                }
+                question.CorrectAnswer = 0;
             }
+            return quiz;
         }
+
     }
 }
